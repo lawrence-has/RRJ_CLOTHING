@@ -1,0 +1,17 @@
+# Local database credentials — never commit these
+config/database.local.php
+
+# Uploaded product images
+uploads/products/*
+!uploads/products/.gitkeep
+
+# Data directory
+data/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
