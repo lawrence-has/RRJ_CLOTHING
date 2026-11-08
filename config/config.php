@@ -246,13 +246,11 @@ function initialize_database(PDO $pdo): void {
     `value` TEXT         NOT NULL
     ) ENGINE=InnoDB");
 
-    /* ── Seed demo data ────────────────────────────────────── */
+    /* ── Seed admin account ────────────────────────────────── */
     $userCount = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
     if ($userCount === 0) {
         $s = $pdo->prepare('INSERT INTO users(name,email,password,role,phone,address) VALUES(?,?,?,?,?,?)');
-        $s->execute(['RRJ Administrator','admin@rrjclothing.com',password_hash('admin123',PASSWORD_DEFAULT),'admin','09171234567','123 Sampaguita St., Brgy. Malinta, Batangas City']);
-        $s->execute(['Juan Dela Cruz','juan@email.com',password_hash('123456',PASSWORD_DEFAULT),'customer','09171234567','123 Sampaguita St., Brgy. Malinta, Batangas City']);
-        $s->execute(['Maria Santos','maria@email.com',password_hash('123456',PASSWORD_DEFAULT),'customer','09087654321','Poblacion, Batangas City']);
+        $s->execute(['RRJ Administrator','admin@rrjclothing.com',password_hash('admin123',PASSWORD_DEFAULT),'admin','','']);
     }
 
     $catCount = (int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn();
