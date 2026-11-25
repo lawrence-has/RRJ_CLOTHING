@@ -71,7 +71,7 @@ $statusBadge = [
 <!-- Stat cards -->
 <div class="staff-grid">
   <div class="staff-card">
-    <div class="card-icon"><i class="bi bi-currency-dollar"></i></div>
+    <div class="card-icon"><i class="bi bi-currency-exchange"></i></div>
     <h3>Today's Sales</h3>
     <strong><?= money($todaySales) ?></strong>
     <span class="muted">Revenue today</span>

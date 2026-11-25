@@ -96,7 +96,7 @@ $payBreakdown = $payData->fetchAll();
 <!-- Summary cards -->
 <div class="staff-grid" style="margin-top:16px">
   <div class="staff-card">
-    <div class="card-icon"><i class="bi bi-currency-dollar"></i></div>
+    <div class="card-icon"><i class="bi bi-currency-exchange"></i></div>
     <h3>Total Sales</h3>
     <strong><?= money((float)$summary['sales']) ?></strong>
     <span class="muted"><?= date('M d', strtotime($from)) ?> – <?= date('M d, Y', strtotime($to)) ?></span>
