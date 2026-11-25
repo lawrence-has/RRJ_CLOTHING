@@ -33,18 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
     $allowed = [
         'store_name', 'store_phone', 'store_email', 'store_address',
-        'shipping_standard', 'shipping_express', 'currency_symbol',
     ];
     $s = db()->prepare('INSERT INTO settings(`key`,`value`) VALUES(?,?) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`)');
     foreach ($allowed as $key) {
         if (array_key_exists($key, $_POST)) {
             $val = trim((string)$_POST[$key]);
-            if (in_array($key, ['shipping_standard','shipping_express'], true)) {
-                $val = (string)max(0, (float)$val);
-            }
-            if ($key === 'currency_symbol' && $val === '') {
-                $val = '₱'; // fallback if cleared
-            }
             $s->execute([$key, $val]);
         }
     }
@@ -69,10 +62,6 @@ require 'header.php';
           <input name="store_name" value="<?= e(setting('store_name','RRJ Clothing')) ?>">
         </div>
         <div class="form-group">
-          <label>Currency Symbol</label>
-          <input name="currency_symbol" value="<?= e(setting('currency_symbol','₱')) ?>" style="width:120px" maxlength="10">
-        </div>
-        <div class="form-group">
           <label>Phone Number</label>
           <input name="store_phone" value="<?= e(setting('store_phone')) ?>">
         </div>
@@ -86,27 +75,6 @@ require 'header.php';
         <textarea name="store_address" rows="2"><?= e(setting('store_address')) ?></textarea>
       </div>
       <button class="btn">Save Store Info</button>
-    </form>
-  </div>
-
-  <!-- Shipping rates -->
-  <div class="staff-panel">
-    <h2 style="margin-bottom:20px"><i class="bi bi-truck"></i> Shipping Rates</h2>
-    <form method="post" action="settings.php">
-      <?= csrf_field() ?>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Standard Delivery (₱)</label>
-          <input type="number" step="0.01" min="0" name="shipping_standard" value="<?= e(setting('shipping_standard','60')) ?>">
-          <div class="form-hint">3–5 business days</div>
-        </div>
-        <div class="form-group">
-          <label>Express Delivery (₱)</label>
-          <input type="number" step="0.01" min="0" name="shipping_express" value="<?= e(setting('shipping_express','120')) ?>">
-          <div class="form-hint">1–2 business days</div>
-        </div>
-      </div>
-      <button class="btn">Save Shipping Rates</button>
     </form>
   </div>
 
