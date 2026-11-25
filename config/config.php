@@ -151,6 +151,10 @@ function initialize_database(PDO $pdo): void {
     if (!$paymentStatusColumn) {
         $pdo->exec("ALTER TABLE orders ADD COLUMN payment_status ENUM('Unpaid','Paid','Refunded') NOT NULL DEFAULT 'Unpaid' AFTER status");
     }
+    $notesColumn = $pdo->query("SHOW COLUMNS FROM orders LIKE 'notes'")->fetch();
+    if (!$notesColumn) {
+        $pdo->exec("ALTER TABLE orders ADD COLUMN notes TEXT AFTER payment_status");
+    }
 
     /* order_items */
     $pdo->exec("CREATE TABLE IF NOT EXISTS order_items (
