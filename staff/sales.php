@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_sale'])) {
     }
 
     if (!$lineItems) {
-        flash('error', 'Add at least one product to record a sale.');
+        flash('error', 'Please select at least one product with a valid price and quantity.');
         redirect('sales.php?tab=new');
     }
 
@@ -644,6 +644,45 @@ document.addEventListener('DOMContentLoaded', () => {
   if (addBtn) {
     addBtn.addEventListener('click', () => addSaleRow());
     initSaleForm();
+  }
+
+  // Client-side validation before submit
+  const saleForm = document.getElementById('saleForm');
+  if (saleForm) {
+    saleForm.addEventListener('submit', e => {
+      const rows = document.querySelectorAll('.sale-item-row');
+      let valid = true;
+      let errorMsg = '';
+
+      if (rows.length === 0) {
+        valid = false;
+        errorMsg = 'Add at least one product before recording a sale.';
+      } else {
+        rows.forEach(row => {
+          const pid   = row.querySelector('.item-product')?.value;
+          const price = parseFloat(row.querySelector('.item-price')?.value || 0);
+          const qty   = parseInt(row.querySelector('.item-qty')?.value || 0, 10);
+          if (!pid) { valid = false; errorMsg = 'Please select a product for every item row.'; }
+          else if (price <= 0) { valid = false; errorMsg = 'Unit price must be greater than 0 for all items.'; }
+          else if (qty < 1)   { valid = false; errorMsg = 'Quantity must be at least 1 for all items.'; }
+        });
+      }
+
+      if (!valid) {
+        e.preventDefault();
+        // Show inline error
+        let err = document.getElementById('saleFormError');
+        if (!err) {
+          err = document.createElement('div');
+          err.id = 'saleFormError';
+          err.className = 'flash error';
+          err.setAttribute('role', 'alert');
+          saleForm.prepend(err);
+        }
+        err.textContent = errorMsg;
+        err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
   }
 });
 </script>
