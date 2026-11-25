@@ -62,6 +62,8 @@ function db(): PDO {
         );
         $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         $pdo->exec("USE `{$name}`");
+        $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+        $pdo->exec("SET CHARACTER SET utf8mb4");
     } catch (PDOException $e) {
         // Show a useful, credential-free diagnostic while keeping secrets hidden.
         $driverCode = (string)($e->errorInfo[1] ?? 'unknown');
@@ -248,7 +250,9 @@ function initialize_database(PDO $pdo): void {
    $pdo->exec("CREATE TABLE IF NOT EXISTS settings (
     `key`   VARCHAR(80)  NOT NULL PRIMARY KEY,
     `value` TEXT         NOT NULL
-    ) ENGINE=InnoDB");
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    // Fix charset on existing settings table
+    $pdo->exec("ALTER TABLE settings CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
     /* ── Seed admin account ────────────────────────────────── */
     $userCount = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
