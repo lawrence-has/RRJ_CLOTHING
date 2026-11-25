@@ -37,11 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $s = db()->prepare('INSERT INTO settings(`key`,`value`) VALUES(?,?) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`)');
     foreach ($allowed as $key) {
-        if (isset($_POST[$key])) {
-            $val = trim($_POST[$key]);
-            // Validate numeric fields
+        if (array_key_exists($key, $_POST)) {
+            $val = trim((string)$_POST[$key]);
             if (in_array($key, ['shipping_standard','shipping_express'], true)) {
                 $val = (string)max(0, (float)$val);
+            }
+            if ($key === 'currency_symbol' && $val === '') {
+                $val = '₱'; // fallback if cleared
             }
             $s->execute([$key, $val]);
         }
@@ -68,7 +70,7 @@ require 'header.php';
         </div>
         <div class="form-group">
           <label>Currency Symbol</label>
-          <input name="currency_symbol" value="<?= e(setting('currency_symbol','₱')) ?>" style="width:80px">
+          <input name="currency_symbol" value="<?= e(setting('currency_symbol','₱')) ?>" style="width:120px" maxlength="10">
         </div>
         <div class="form-group">
           <label>Phone Number</label>
