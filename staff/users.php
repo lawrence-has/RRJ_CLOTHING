@@ -120,8 +120,8 @@ $roleBadge = ['admin'=>'badge-admin','staff'=>'badge-staff','customer'=>'badge-c
       <div class="form-group">
         <label>Role *</label>
         <select name="role">
-          <?php foreach (['staff'=>'Staff','customer'=>'Customer','admin'=>'Admin'] as $r => $l): ?>
-            <?php if ($r === 'admin' && $u['role'] !== 'admin') continue; // only admins can assign admin ?>
+          <?php foreach (['staff'=>'Staff','admin'=>'Admin'] as $r => $l): ?>
+            <?php if ($r === 'admin' && $u['role'] !== 'admin') continue; ?>
             <option value="<?= $r ?>" <?= ($editUser['role']??'staff')===$r?'selected':'' ?>><?= $l ?></option>
           <?php endforeach; ?>
         </select>
